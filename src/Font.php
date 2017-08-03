@@ -1,12 +1,23 @@
 <?php
 namespace alf;
 
-class Font {
-	private $name;
-	private $size;
-	private $canvas;
+interface Font {
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getName();
 	
-	public function __construct($name, $size, $canvas){
-		
-	}
+	/**
+	 *
+	 * @return number
+	 */
+	public function getSize();
+	
+	/**
+	 * 
+	 * @param string $text
+	 * @return number
+	 */
+	public function getTextWith($text);
 }
