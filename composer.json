@@ -1,0 +1,11 @@
+{
+	"name": "10usb/alf",
+	"description": "Another Layout Framework",
+	"type": "library",
+	"require": {
+		"php": ">=7.0"
+	},
+	"autoload": {
+		"psr-4": { "alf\\": "src/" }
+	}
+}
