@@ -1,0 +1,3 @@
+# Another Layout Framework (Alf)
+
+Why Alf? To make alignment of content on a canvas an ease. No it does not convert a mark-up language to 2D graphics, it could be the layer between. And it does not have rich set of layout-managers. But it does have block element and inline element alignement, something every "Web browser engine" has under the hood. By not having an DOM structure the programmatically interface is less complex. Adding custom elements with it's own rendering code is just as simple as making a compatible class and appending it. 
