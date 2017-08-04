@@ -100,7 +100,7 @@ class Line implements Block {
 	}
 	
 	public function getHeight(){
-		return 0;
+		return $this->getCalulatedHeight();
 	}
 	
 	/**

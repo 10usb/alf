@@ -87,6 +87,12 @@ class Body implements Container {
 	 * @see \alf\Renderable::render()
 	 */
 	public function render($canvas){
+		$top = 0;
+		foreach($this->blocks as $block){
+			$block->render(new TranslatedCanvas($canvas, 0, $top));
+			
+			$top+= $block->getCalulatedHeight();
+		}
 		
 	}
 }
