@@ -17,6 +17,12 @@ interface Inline extends Element {
 	public function setLineLeft($value);
 	
 	/**
+	 * Returns the current left position on the line
+	 * @param number $value
+	 */
+	public function getLineLeft();
+	
+	/**
 	 * Called by the line to set offset from the top of the line
 	 * @param number $value
 	 */

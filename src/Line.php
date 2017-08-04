@@ -23,8 +23,26 @@ class Line implements Block {
 	}
 	
 	/**
-	 * Called by the parent container when appended to it
-	 * @param \alf\Container $container
+	 *
+	 * @param \alf\Inline $element
+	 */
+	public function append($element){
+		if(!$element instanceof Inline) throw new \Exception('Unexpected object type expected a Inline');
+		
+		if($this->items){
+			$last = end($this->items);
+			$element->setLineLeft($last->getLineLeft() + $last->getWidth() + max($last->getMarginRight(), $element->getMarginLeft()));
+		}else{
+			$element->setLineLeft(0);
+		}
+		
+		$this->items[] = $element;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Block::setContainer()
 	 */
 	public function setContainer($container){
 		$this->container = $container;
@@ -40,6 +58,14 @@ class Line implements Block {
 	}
 	
 	/**
+	 * Returns the minimal height this element will consume
+	 * @return number
+	 */
+	public function getMinimalHeight(){
+		
+	}
+	
+	/**
 	 * Returns the calculated height this block will consume which could be a fixed value or dynamic value depending on its content
 	 * @return number
 	 */
@@ -51,14 +77,30 @@ class Line implements Block {
 		return $height;
 	}
 	
-	/**
-	 * 
-	 * @param \alf\Inline $element
-	 */
-	public function append($element){
-		if(!$element instanceof Inline) throw new \Exception('Unexpected object type expected a Inline');
-		$element->setLine($this);
-		$items->items[] = $element;
+	public function getMarginLeft(){
+		return 0;
+	}
+	
+	public function getMarginTop(){
+		$this->verticalAlignChilds();
+		return 0;
+	}
+	
+	public function getMarginRight(){
+		return 0;
+	}
+	
+	public function getMarginBottom(){
+		$this->verticalAlignChilds();
+		return 0;
+	}
+	
+	public function getWidth(){
+		return 0;
+	}
+	
+	public function getHeight(){
+		return 0;
 	}
 	
 	/**
@@ -67,6 +109,34 @@ class Line implements Block {
 	 * @see \alf\Renderable::render()
 	 */
 	public function render($canvas){
+		$this->verticalAlignChilds();
 		
+		foreach($this->items as $item){
+			$item->render($canvas);
+		}
+	}
+	
+	/**
+	 * 
+	 * @throws \Exception
+	 */
+	private function verticalAlignChilds(){
+		$height = $this->getCalulatedHeight();
+		
+		foreach($this->items as $item){
+			switch($item->getVerticalAlignment()){
+				case Inline::ALIGN_TOP:
+					$item->setLineTop(0);
+				break;
+				case Inline::ALIGN_MIDDLE:
+					$item->setLineTop(($height - $item->getHeight()) / 2);
+				break;
+				case Inline::ALIGN_BOTTOM:
+					$item->setLineTop($height - $item->getHeight());
+				break;
+				throw new \Exception('Unknown alignment');
+			}
+			
+		}
 	}
 }

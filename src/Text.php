@@ -61,6 +61,15 @@ class Text implements Inline {
 	/**
 	 * 
 	 * {@inheritDoc}
+	 * @see \alf\Inline::getLineLeft()
+	 */
+	public function getLineLeft(){
+		return $this->lineLeft;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see \alf\Inline::setLineTop()
 	 */
 	public function setLineTop($value){
@@ -82,7 +91,7 @@ class Text implements Inline {
 	 * @see \alf\Inline::getVerticalAlignment()
 	 */
 	public function getVerticalAlignment(){
-		return Inline::ALIGN_BOTTOM;
+		return Inline::ALIGN_MIDDLE;
 	}
 	
 	/**
@@ -148,6 +157,6 @@ class Text implements Inline {
 	public function render($canvas){
 		$canvas->setFont($this->font->getName(), $this->font->getSize());
 		$canvas->setFillColor($this->color);
-		$canvas->fillText($this->value, $this->lineLeft, $this->lineTop + $this->font->getSize());
+		$canvas->fillText($this->value, $this->lineLeft, $this->lineTop + $this->font->getSize() * 0.8575);
 	}
 }
