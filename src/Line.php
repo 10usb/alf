@@ -40,25 +40,27 @@ class Line implements Block {
 	}
 	
 	/**
-	 * Sets a fixed height for this block
-	 * @param number $height
-	 * @return self
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Block::setPreferredHeight()
 	 */
-	public function setHeight($height){
-		return $this;
+	public function setPreferredHeight($height){
+		/* Nothing todo */
 	}
 	
 	/**
-	 * Returns the minimal height this element will consume
-	 * @return number
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Block::getMinimalHeight()
 	 */
 	public function getMinimalHeight(){
-		
+		return $this->getCalulatedHeight();
 	}
 	
 	/**
-	 * Returns the calculated height this block will consume which could be a fixed value or dynamic value depending on its content
-	 * @return number
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Block::getCalulatedHeight()
 	 */
 	public function getCalulatedHeight(){
 		$height = 0;
@@ -68,32 +70,66 @@ class Line implements Block {
 		return $height;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getMarginLeft()
+	 */
 	public function getMarginLeft(){
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getMarginTop()
+	 */
 	public function getMarginTop(){
 		$this->verticalAlignChilds();
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getMarginRight()
+	 */
 	public function getMarginRight(){
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getMarginBottom()
+	 */
 	public function getMarginBottom(){
 		$this->verticalAlignChilds();
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getWidth()
+	 */
 	public function getWidth(){
 		return $this->width;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Element::getHeight()
+	 */
 	public function getHeight(){
 		return $this->getCalulatedHeight();
 	}
 	
+	/**
+	 * 
+	 * @return number
+	 */
 	public function getContentWidth(){
 		$width = 0;
 		foreach($this->items as $item){
@@ -102,6 +138,10 @@ class Line implements Block {
 		return $width;
 	}
 	
+	/**
+	 * 
+	 * @return number
+	 */
 	public function getContentTrailMargin(){
 		if(!$this->items) return 0;
 		return end($this->items)->getMarginRight();
@@ -122,7 +162,6 @@ class Line implements Block {
 	
 	/**
 	 * 
-	 * @throws \Exception
 	 */
 	private function verticalAlignChilds(){
 		$height = $this->getCalulatedHeight();

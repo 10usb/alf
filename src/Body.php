@@ -33,8 +33,8 @@ class Body implements Container {
 	
 	/**
 	 * 
-	 * @param \alf\Block $element
-	 * @return \alf\Block
+	 * {@inheritDoc}
+	 * @see \alf\Container::appendBlock()
 	 */
 	public function appendBlock($element){
 		if(!$element instanceof Block) throw new \Exception('Unexpected object type expected a Block');
@@ -44,8 +44,8 @@ class Body implements Container {
 	
 	/**
 	 * 
-	 * @param \alf\Inline $element
-	 * @return \alf\Inline
+	 * {@inheritDoc}
+	 * @see \alf\Container::appendInline()
 	 */
 	public function appendInline($element){
 		if(!$element instanceof Inline) throw new \Exception('Unexpected object type expected a Inline');
@@ -67,10 +67,11 @@ class Body implements Container {
 		
 		return $element;
 	}
+	
 	/**
-	 *
-	 * @param string $text
-	 * @param array $style
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Container::appendText()
 	 */
 	public function appendText($text, $font, $color, $lineHeight = false, $style = []){
 		if(!is_string($text)) throw new \Exception('Unexpected type expected a string ^^');
@@ -143,8 +144,9 @@ class Body implements Container {
 	}
 	
 	/**
-	 * Returns the minimal height this element will consume
-	 * @return number
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Sliceable::getMinimalHeight()
 	 */
 	public function getMinimalHeight(){
 		if(!$this->blocks) return 0;
@@ -153,12 +155,12 @@ class Body implements Container {
 	}
 	
 	/**
-	 * Returns a slice of this element
-	 * @param number $height
-	 * @return self|false
+	 * TODO inpliment this method
+	 * {@inheritDoc}
+	 * @see \alf\Sliceable::slice()
 	 */
 	public function slice($height){
-		
+		throw new \Exception('Not implimented');
 	}
 	
 	/**

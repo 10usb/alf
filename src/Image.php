@@ -1,7 +1,7 @@
 <?php
 namespace alf;
 
-class Image implements /*Block, */Inline {
+class Image implements Block, Inline {
 	/**
 	 * 
 	 * @var string
@@ -84,7 +84,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Inline::getFloating()
 	 */
 	public function getFloating(){
-		return Inline::FLOAT_NONE;
+		return $this->style['floating'] ?? Inline::FLOAT_NONE;
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Inline::getVerticalAlignment()
 	 */
 	public function getVerticalAlignment(){
-		return Inline::ALIGN_MIDDLE;
+		return $this->style['vertical-alignment'] ?? Inline::ALIGN_MIDDLE;
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Element::getMarginLeft()
 	 */
 	public function getMarginLeft(){
-		return 0;
+		return $this->style['margin-left'] ?? 0;
 	}
 	
 	/**
@@ -111,7 +111,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Element::getMarginTop()
 	 */
 	public function getMarginTop(){
-		return 0;
+		return $this->style['margin-top'] ?? 0;
 	}
 	
 	/**
@@ -120,7 +120,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Element::getMarginRight()
 	 */
 	public function getMarginRight(){
-		return 0;
+		return $this->style['margin-right'] ?? 0;
 	}
 	
 	/**
@@ -129,7 +129,7 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Element::getMarginBottom()
 	 */
 	public function getMarginBottom(){
-		return 0;
+		return $this->style['margin-bottom'] ?? 0;
 	}
 	
 	/**
@@ -147,6 +147,33 @@ class Image implements /*Block, */Inline {
 	 * @see \alf\Element::getHeight()
 	 */
 	public function getHeight(){
+		return $this->style['height'];
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see \alf\Block::setHeight()
+	 */
+	public function setPreferredHeight($height){
+		/* Nothing todo */
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see \alf\Block::getMinimalHeight()
+	 */
+	public function getMinimalHeight(){
+		return $this->style['height'];
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see \alf\Block::getCalulatedHeight()
+	 */
+	public function getCalulatedHeight(){
 		return $this->style['height'];
 	}
 	
