@@ -2,11 +2,6 @@
 namespace alf;
 
 class Line implements Block {
-	/**
-	 * 
-	 * @var \alf\Container
-	 */
-	private $container;
 	
 	/**
 	 * 
@@ -18,7 +13,6 @@ class Line implements Block {
 	 * 
 	 */
 	public function __construct(){
-		$this->container	= null;
 		$this->items		= [];
 	}
 	
@@ -37,15 +31,6 @@ class Line implements Block {
 		}
 		
 		$this->items[] = $element;
-	}
-	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see \alf\Block::setContainer()
-	 */
-	public function setContainer($container){
-		$this->container = $container;
 	}
 	
 	/**

@@ -2,11 +2,6 @@
 namespace alf;
 
 interface Block extends Element {
-	/**
-	 * Called by the parent container when appended to it
-	 * @param \alf\Container $container
-	 */
-	public function setContainer($container);
 	
 	/**
 	 * Sets a fixed height for this block

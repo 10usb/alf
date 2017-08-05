@@ -39,7 +39,6 @@ class Body implements Container {
 	public function appendBlock($element){
 		if(!$element instanceof Block) throw new \Exception('Unexpected object type expected a Block');
 		$this->blocks[] = $element;
-		$element->setContainer($this);
 		return $element;
 	}
 	
