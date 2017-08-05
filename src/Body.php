@@ -50,6 +50,21 @@ class Body implements Container {
 	public function appendInline($element){
 		if(!$element instanceof Inline) throw new \Exception('Unexpected object type expected a Inline');
 		
+		// Get a line with full, empty or new
+		if(!end($this->blocks) instanceof Line){
+			$this->blocks[] = new Line($this->width);
+		}
+		
+		/** @var \alf\Line $line */
+		$line = end($this->blocks);
+		$remain		= $this->width - $line->getContentWidth() - max($line->getContentTrailMargin(), $element->getMarginLeft()) - $element->getMarginRight();
+		if($remain < $element->getWidth()){
+			$this->blocks[] = new Line($this->width);
+			$line = end($this->blocks);
+		}
+		
+		$line->append($element);
+		
 		return $element;
 	}
 	/**

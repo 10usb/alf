@@ -80,7 +80,7 @@ class TranslatedCanvas implements Canvas {
 	}
 	
 	public function drawImage($image, $dx, $dy, $dWidth, $dHeight){
-		$this->canvas->drawImage($image, $dx, $dy, $dWidth, $dHeight);
+		$this->canvas->drawImage($image, $dx + $this->left, $dy + $this->top, $dWidth, $dHeight);
 	}
 	
 	public function moveTo($x, $y){
