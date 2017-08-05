@@ -2,6 +2,11 @@
 namespace alf;
 
 class Line implements Block {
+	/**
+	 *
+	 * @var number
+	 */
+	private $width;
 	
 	/**
 	 * 
@@ -12,8 +17,9 @@ class Line implements Block {
 	/**
 	 * 
 	 */
-	public function __construct(){
-		$this->items		= [];
+	public function __construct($width){
+		$this->width	= $width;
+		$this->items	= [];
 	}
 	
 	/**
@@ -81,11 +87,24 @@ class Line implements Block {
 	}
 	
 	public function getWidth(){
-		return 0;
+		return $this->width;
 	}
 	
 	public function getHeight(){
 		return $this->getCalulatedHeight();
+	}
+	
+	public function getContentWidth(){
+		$width = 0;
+		foreach($this->items as $item){
+			$width+= $item->getWidth();
+		}
+		return $width;
+	}
+	
+	public function getContentTrailMargin(){
+		if(!$this->items) return 0;
+		return end($this->items)->getMarginRight();
 	}
 	
 	/**

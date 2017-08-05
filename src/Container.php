@@ -21,5 +21,5 @@ interface Container extends Sliceable, Renderable {
 	 * @param string $text
 	 * @param array $style
 	 */
-	public function appendText($text, $style);
+	public function appendText($text, $font, $color, $lineHeight = false, $style = []);
 }
