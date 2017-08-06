@@ -24,14 +24,6 @@ class Body implements Container {
 	}
 	
 	/**
-	 * Returns the width of the container
-	 * @return number
-	 */
-	public function getWidth(){
-		return $this->width;
-	}
-	
-	/**
 	 * 
 	 * {@inheritDoc}
 	 * @see \alf\Container::appendBlock()
