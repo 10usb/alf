@@ -162,24 +162,6 @@ class Image implements Block, Inline {
 	/**
 	 *
 	 * {@inheritDoc}
-	 * @see \alf\Block::getMinimalHeight()
-	 */
-	public function getMinimalHeight(){
-		return $this->style['height'];
-	}
-	
-	/**
-	 *
-	 * {@inheritDoc}
-	 * @see \alf\Block::getCalulatedHeight()
-	 */
-	public function getCalulatedHeight(){
-		return $this->style['height'];
-	}
-	
-	/**
-	 *
-	 * {@inheritDoc}
 	 * @see \alf\Renderable::render()
 	 */
 	public function render($canvas){

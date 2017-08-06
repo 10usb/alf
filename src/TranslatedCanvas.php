@@ -60,11 +60,11 @@ class TranslatedCanvas implements Canvas {
 	}
 	
 	public function fillRect($x, $y, $width, $height){
-		$this->canvas->rectangle($x + $this->left, $y + $this->top, $width, $height);
+		$this->canvas->fillRect($x + $this->left, $y + $this->top, $width, $height);
 	}
 	
 	public function strokeRect($x, $y, $width, $height){
-		$this->canvas->rectangle($x + $this->left, $y + $this->top, $width, $height, false, true);
+		$this->canvas->strokeRect($x + $this->left, $y + $this->top, $width, $height, false, true);
 	}
 	
 	public function fillText($text, $x, $y){

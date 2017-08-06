@@ -128,11 +128,10 @@ class Body implements Container {
 			}
 			
 			$segment = implode(' ', array_slice($words, 0, $length + 1));
-			while($length < count($words) && $font->getTextWith($segment) < $this->width){
+			while($length < count($words) && $font->getTextWith($segment) < $remain){
 				$length++;
 				$segment = implode(' ', array_slice($words, 0, $length + 1));
 			}
-			
 			
 			$line->append(new Text(implode(' ', array_splice($words, 0, $length)), $font, $color, $lineHeight, $style));
 			
@@ -146,12 +145,34 @@ class Body implements Container {
 	/**
 	 * 
 	 * {@inheritDoc}
+	 * @see \alf\Container::getContentWidth()
+	 */
+	public function getContentWidth(){
+		return $this->width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see \alf\Sliceable::getMinimalHeight()
 	 */
 	public function getMinimalHeight(){
 		if(!$this->blocks) return 0;
 		if($this->blocks[0] instanceof Sliceable) return $this->blocks[0]->getMinimalHeight();
-		return $this->blocks[0]->getCalulatedHeight();
+		return $this->blocks[0]->getHeight();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Container::getCalulatedHeight()
+	 */
+	public function getCalulatedHeight(){
+		$height = 0;
+		foreach($this->blocks as $block){
+			$height+= $block->getHeight();
+		}
+		return $height;
 	}
 	
 	/**
@@ -173,7 +194,7 @@ class Body implements Container {
 		foreach($this->blocks as $block){
 			$block->render(new TranslatedCanvas($canvas, 0, $top));
 			
-			$top+= $block->getCalulatedHeight();
+			$top+= $block->getHeight();
 		}
 	}
 }

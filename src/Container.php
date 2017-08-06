@@ -22,4 +22,16 @@ interface Container extends Sliceable, Renderable {
 	 * @param array $style
 	 */
 	public function appendText($text, $font, $color, $lineHeight = false, $style = []);
+	
+	/**
+	 * Returns the widht of the content
+	 * @return number
+	 */
+	public function getContentWidth();
+	
+	/**
+	 * Returns the calculated height this block will consume which could be a fixed value or dynamic value depending on its content
+	 * @return number
+	 */
+	public function getCalulatedHeight();
 }

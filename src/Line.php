@@ -51,28 +51,6 @@ class Line implements Block {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see \alf\Block::getMinimalHeight()
-	 */
-	public function getMinimalHeight(){
-		return $this->getCalulatedHeight();
-	}
-	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see \alf\Block::getCalulatedHeight()
-	 */
-	public function getCalulatedHeight(){
-		$height = 0;
-		foreach($this->items as $item){
-			$height = max($height, $item->getHeight());
-		}
-		return $height;
-	}
-	
-	/**
-	 * 
-	 * {@inheritDoc}
 	 * @see \alf\Element::getMarginLeft()
 	 */
 	public function getMarginLeft(){
@@ -80,7 +58,7 @@ class Line implements Block {
 	}
 	
 	/**
-	 * 
+	 * TODO calculate the margin
 	 * {@inheritDoc}
 	 * @see \alf\Element::getMarginTop()
 	 */
@@ -99,7 +77,7 @@ class Line implements Block {
 	}
 	
 	/**
-	 * 
+	 * TODO calculate the margin
 	 * {@inheritDoc}
 	 * @see \alf\Element::getMarginBottom()
 	 */
@@ -123,7 +101,11 @@ class Line implements Block {
 	 * @see \alf\Element::getHeight()
 	 */
 	public function getHeight(){
-		return $this->getCalulatedHeight();
+		$height = 0;
+		foreach($this->items as $item){
+			$height = max($height, $item->getHeight());
+		}
+		return $height;
 	}
 	
 	/**
@@ -164,7 +146,7 @@ class Line implements Block {
 	 * 
 	 */
 	private function verticalAlignChilds(){
-		$height = $this->getCalulatedHeight();
+		$height = $this->getHeight();
 		
 		foreach($this->items as $item){
 			switch($item->getVerticalAlignment()){

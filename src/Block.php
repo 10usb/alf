@@ -7,16 +7,4 @@ interface Block extends Element {
 	 * @param number $height
 	 */
 	public function setPreferredHeight($height);
-	
-	/**
-	 * Returns the minimal height this element will consume
-	 * @return number
-	 */
-	public function getMinimalHeight();
-	
-	/**
-	 * Returns the calculated height this block will consume which could be a fixed value or dynamic value depending on its content
-	 * @return number
-	 */
-	public function getCalulatedHeight();
 }
