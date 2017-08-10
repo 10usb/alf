@@ -282,7 +282,7 @@ class Section implements Block, Inline, Container {
 		}
 		
 		
-		if(isset($this->style['padding-left'])) $left+= $this->style['padding-bottom'];
+		if(isset($this->style['padding-left'])) $left+= $this->style['padding-left'];
 		if(isset($this->style['padding-top'])) $top+= $this->style['padding-top'];
 		$this->contents->render(new TranslatedCanvas($canvas, $left, $top));
 	}
