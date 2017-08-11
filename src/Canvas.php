@@ -12,7 +12,7 @@ interface Canvas {
 	
 	public function setFillColor($color);
 	public function setStrokeColor($color);
-	public function setFont($name, $size);
+	public function setFont($name, $size, $italic = false, $bold = false);
 	
 	public function setLineWidth($width);
 	public function setLineCap($style);

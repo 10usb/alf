@@ -35,8 +35,8 @@ class TranslatedCanvas implements Canvas {
 		$this->canvas->setStrokeColor($color);
 	}
 	
-	public function setFont($name, $size){
-		$this->canvas->setFont($name, $size);
+	public function setFont($name, $size, $italic = false, $bold = false){
+		$this->canvas->setFont($name, $size, $italic, $bold);
 	}
 	
 	public function setLineWidth($width){
