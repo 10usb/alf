@@ -238,7 +238,7 @@ class Section implements Block, Inline, Container {
 	 * @see \alf\Container::appendText()
 	 */
 	public function appendText($text, $font, $color, $lineHeight = false, $style = []){
-		$this->contents->appendText($text, $font, $color);
+		$this->contents->appendText($text, $font, $color, $lineHeight, $style);
 	}
 	
 	/**

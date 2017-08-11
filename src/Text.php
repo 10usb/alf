@@ -40,7 +40,7 @@ class Text implements Inline {
 	 * @param string $color
 	 * @param number $lineHeight
 	 */
-	public function  __construct($value, $font, $color, $lineHeight = false, $style = []){
+	public function __construct($value, $font, $color, $lineHeight = false, $style = []){
 		$this->value		= $value;
 		$this->font			= $font;
 		$this->color		= $color;
