@@ -183,10 +183,15 @@ class Body implements Container {
 	 */
 	public function render($canvas){
 		$top = 0;
-		foreach($this->blocks as $block){
+		$margin = 0;
+		foreach($this->blocks as $index=>$block){
+			if($index > 0){
+				$top+= max($margin, $block->getMarginTop());
+			}
 			$block->render(new TranslatedCanvas($canvas, 0, $top));
 			
 			$top+= $block->getHeight();
+			$margin = $block->getMarginBottom();
 		}
 	}
 }
