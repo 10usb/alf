@@ -17,6 +17,7 @@ interface Canvas {
 	public function setLineWidth($width);
 	public function setLineCap($style);
 	public function setLineJoin($style);
+	public function setLineDash($segments, $offset = 0);
 	
 	public function save();
 	public function restore();

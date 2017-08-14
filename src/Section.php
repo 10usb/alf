@@ -59,15 +59,15 @@ class Section implements Block, Inline, Container {
 			$this->width	= $width;
 			if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
 			if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
-			if(isset($this->style['border-left'])) $width-= $this->style['border-left'];
-			if(isset($this->style['border-right'])) $width-= $this->style['border-right'];
+			if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
+			if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
 			$this->contents = new Body($width);
 		}elseif($box == self::CONTENT_BOX){
 			$this->contents = new Body($width);
 			if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
 			if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
-			if(isset($this->style['border-left'])) $width+= $this->style['border-left'];
-			if(isset($this->style['border-right'])) $width+= $this->style['border-right'];
+			if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
+			if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
 			$this->width	= $width;
 		}else{
 			throw new \Exception('Invalid box model');
@@ -192,8 +192,8 @@ class Section implements Block, Inline, Container {
 		
 		if(isset($this->style['padding-top'])) $height+= $this->style['padding-top'];
 		if(isset($this->style['padding-bottom'])) $height+= $this->style['padding-bottom'];
-		if(isset($this->style['border-top'])) $height+= $this->style['border-top'];
-		if(isset($this->style['border-bottom'])) $height+= $this->style['border-bottom'];
+		if(isset($this->style['border-top-width'])) $height+= $this->style['border-top-width'];
+		if(isset($this->style['border-bottom-width'])) $height+= $this->style['border-bottom-width'];
 		
 		return $height;
 	}
@@ -208,8 +208,8 @@ class Section implements Block, Inline, Container {
 		
 		if(isset($this->style['padding-top'])) $height+= $this->style['padding-top'];
 		if(isset($this->style['padding-bottom'])) $height+= $this->style['padding-bottom'];
-		if(isset($this->style['border-top'])) $height+= $this->style['border-top'];
-		if(isset($this->style['border-bottom'])) $height+= $this->style['border-bottom'];
+		if(isset($this->style['border-top-width'])) $height+= $this->style['border-top-width'];
+		if(isset($this->style['border-bottom-width'])) $height+= $this->style['border-bottom-width'];
 		
 		return $height;
 	}
@@ -265,25 +265,121 @@ class Section implements Block, Inline, Container {
 	 * @see \alf\Renderable::render()
 	 */
 	public function render($canvas){
-		$left	= 0;
-		$top	= 0;
-		if(isset($this->style['border-left'])) $left+= $this->style['border-left'];
-		if(isset($this->style['border-top'])) $top+= $this->style['border-top'];
+		$this->renderBackground($canvas);
+		$this->renderContents($canvas);
+		$this->renderBorder($canvas);
+	}
+	
+	/**
+	 * 
+	 * @param \alf\Canvas $canvas
+	 * @return boolean
+	 */
+	private function renderBackground($canvas){
+		if(!isset($this->style['background-color'])) return false;
 		
-		$width	 = $this->width - $left;
-		$height	 = $this->getHeight() - top;
-		if(isset($this->style['border-right'])) $width-= $this->style['border-right'];
-		if(isset($this->style['border-bottom'])) $height-= $this->style['border-bottom'];
+		$canvas->setFillColor($this->style['background-color']);
+		$canvas->fillRect(0, 0, $this->width, $this->getHeight());
 		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param \alf\Canvas $canvas
+	 * @return boolean
+	 */
+	private function renderContents($canvas){
+		$this->getBorderlessBox($left, $top, $width, $height);
 		
-		if(isset($this->style['background-color'])){
-			$canvas->setFillColor($this->style['background-color']);
-			$canvas->fillRect($left, $top, $width, $height);
+		if(isset($this->style['padding-left'])) $left+= $this->style['padding-left']; 
+		if(isset($this->style['padding-top'])) $top+= $this->style['padding-top']; 
+		$this->contents->render(new TranslatedCanvas($canvas, $left, $top));
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param \alf\Canvas $canvas
+	 * @return boolean
+	 */
+	private function renderBorder($canvas){
+		if(isset($this->style['border-top-width'])){
+			$halveWidth = $this->style['border-top-width'] / 2;
+			$canvas->moveTo($halveWidth, $halveWidth);
+			$canvas->LineTo($this->getWidth() - $halveWidth, $halveWidth);
+			$canvas->setStrokeColor($this->style['border-left-color'] ? $this->style['border-top-color'] : '#000000');
+			$canvas->setLineWidth($this->style['border-top-width']);
+			$this->setBorderStyle($canvas, $this->style['border-top-style'], $halveWidth);
+			$canvas->stroke();
 		}
 		
+		if(isset($this->style['border-bottom-width'])){
+			$halveWidth = $this->style['border-bottom-width'] / 2;
+			$canvas->moveTo($halveWidth, $this->getHeight() - $halveWidth);
+			$canvas->LineTo($this->getWidth() - $halveWidth, $this->getHeight() - $halveWidth);
+			$canvas->setStrokeColor($this->style['border-bottom-color'] ? $this->style['border-bottom-color'] : '#000000');
+			$canvas->setLineWidth($this->style['border-bottom-width']);
+			$this->setBorderStyle($canvas, $this->style['border-bottom-style'], $halveWidth);
+			$canvas->stroke();
+		}
 		
-		if(isset($this->style['padding-left'])) $left+= $this->style['padding-left'];
-		if(isset($this->style['padding-top'])) $top+= $this->style['padding-top'];
-		$this->contents->render(new TranslatedCanvas($canvas, $left, $top));
+		if(isset($this->style['border-left-width'])){
+			$halveWidth = $this->style['border-left-width'] / 2;
+			$canvas->moveTo($halveWidth, $halveWidth);
+			$canvas->LineTo($halveWidth, $this->getHeight() - $halveWidth);
+			$canvas->setStrokeColor($this->style['border-left-color'] ? $this->style['border-left-color'] : '#000000');
+			$canvas->setLineWidth($this->style['border-left-width']);
+			$this->setBorderStyle($canvas, $this->style['border-left-style'], $halveWidth);
+			$canvas->stroke();
+		}
+		
+		if(isset($this->style['border-right-width'])){
+			$halveWidth = $this->style['border-right-width'] / 2;
+			$canvas->moveTo($this->getWidth() - $halveWidth, $halveWidth);
+			$canvas->LineTo($this->getWidth() - $halveWidth, $this->getHeight() - $halveWidth);
+			$canvas->setStrokeColor($this->style['border-right-color'] ? $this->style['border-right-color'] : '#000000');
+			$canvas->setLineWidth($this->style['border-right-width']);
+			$this->setBorderStyle($canvas, $this->style['border-right-style'], $halveWidth);
+			$canvas->stroke();
+		}
+	}
+	
+	private function setBorderStyle($canvas, $style, $halveWidth){
+		switch($style){
+			case 'dashed':
+				$canvas->setLineCap(Canvas::LINECAP_SQUARE);
+				$canvas->setLineDash([2 * $halveWidth, 4 * $halveWidth]);
+			break;
+			case 'solid':
+				$canvas->setLineCap(Canvas::LINECAP_SQUARE);
+				$canvas->setLineDash([0, 0]);
+			break;
+			case 'dotted':
+				$canvas->setLineCap(Canvas::LINECAP_ROUND);
+				$canvas->setLineDash([0, 4 * $halveWidth]);
+			break;
+			default: throw new \Exception('Unsupported line style');
+		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param number $left
+	 * @param number $top
+	 * @param number $width
+	 * @param number $height
+	 */
+	private function getBorderlessBox(&$left, &$top, &$width, &$height){
+		$left	= 0; 
+		$top	= 0; 
+		$width	= $this->width - $left; 
+		$height	= $this->getHeight() - $top; 
+		if(isset($this->style['border-left-width'])) $left+= $this->style['border-left-width']; 
+		if(isset($this->style['border-top-width'])) $top+= $this->style['border-top-width']; 
+		if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width']; 
+		if(isset($this->style['border-bottom-width'])) $height-= $this->style['border-bottom-width']; 
 	}
 }

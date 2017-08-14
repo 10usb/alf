@@ -51,6 +51,10 @@ class TranslatedCanvas implements Canvas {
 		$this->canvas->setLineJoin($style);
 	}
 	
+	public function setLineDash($segments, $offset = 0){
+		$this->canvas->setLineDash($segments, $offset = 0);
+	}
+	
 	public function save(){
 		$this->canvas->save();
 	}
