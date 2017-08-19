@@ -160,6 +160,33 @@ class Image implements Block, Inline {
 	}
 	
 	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getMinimalWidth()
+	 */
+	public function getMinimalWidth(){
+		return $this->getWidth();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getCalulatedWidth()
+	 */
+	public function getCalulatedWidth(){
+		return $this->getWidth();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::pack()
+	 */
+	public function pack($width){
+		return false;
+	}
+	
+	/**
 	 *
 	 * {@inheritDoc}
 	 * @see \alf\Renderable::render()

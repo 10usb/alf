@@ -25,6 +25,14 @@ class Body implements Container {
 	
 	/**
 	 * 
+	 * @return \alf\Block[]
+	 */
+	public function getBlocks(){
+		return $this->blocks;
+	}
+	
+	/**
+	 * 
 	 * {@inheritDoc}
 	 * @see \alf\Container::appendBlock()
 	 */
@@ -76,60 +84,64 @@ class Body implements Container {
 		/** @var \alf\Line $line */
 		$line = end($this->blocks);
 		
-		// Split text into words
-		$words = preg_split('/\s+/', $text);
-		while(count($words) > 0){
-			$length		= count($words);
-			$segment	= implode(' ', array_slice($words, 0, $length));
-			$remain		= $this->width - $line->getContentWidth() - $line->getContentTrailMargin(); 
-			
-			// Cut-off text to get a length fitting
-			while($length > 1 && $font->getTextWith($segment) > $remain){
-				$length/=2;
-				$segment = implode(' ', array_slice($words, 0, $length));
-			}
-			
-			if($length == 1 && $remain < $this->width && $font->getTextWith($segment) > $remain){
-				$this->blocks[] = new Line($this->width);
-				$line = end($this->blocks);
-				continue;
-			}
-			
-			if($length == 1 && $font->getTextWith($segment) > $this->width){
-				// Split word
-				$length	= strlen($words[0]) / 2;
-				$segment= substr($words[0], 0, $length);
+		if($this->width === false){
+			$line->append(new Text($text, $font, $color, $lineHeight, $style));
+		}else{
+			// Split text into words
+			$words = preg_split('/\s+/', $text);
+			while(count($words) > 0){
+				$length		= count($words);
+				$segment	= implode(' ', array_slice($words, 0, $length));
+				$remain		= $this->width - $line->getContentWidth() - $line->getContentTrailMargin(); 
 				
-				while($length > 1 && $font->getTextWith($segment) > $this->width){
+				// Cut-off text to get a length fitting
+				while($length > 1 && $font->getTextWith($segment) > $remain){
 					$length/=2;
-					$segment = substr($words[0], 0, $length);
+					$segment = implode(' ', array_slice($words, 0, $length));
 				}
 				
-				$segment= substr($words[0], 0, $length + 1);
-				while($length < strlen($words[0]) && $font->getTextWith($segment) < $this->width){
-					$length++;
-					$segment = substr($words[0], 0, $length + 1);
+				if($length == 1 && $remain < $this->width && $font->getTextWith($segment) > $remain){
+					$this->blocks[] = new Line($this->width);
+					$line = end($this->blocks);
+					continue;
 				}
 				
-				$line->append(new Text(substr($words[0], 0, $length), $font, $color, $lineHeight, $style));
-				$this->blocks[] = new Line($this->width);
-				$line = end($this->blocks);
+				if($length == 1 && $font->getTextWith($segment) > $this->width){
+					// Split word
+					$length	= strlen($words[0]) / 2;
+					$segment= substr($words[0], 0, $length);
+					
+					while($length > 1 && $font->getTextWith($segment) > $this->width){
+						$length/=2;
+						$segment = substr($words[0], 0, $length);
+					}
+					
+					$segment= substr($words[0], 0, $length + 1);
+					while($length < strlen($words[0]) && $font->getTextWith($segment) < $this->width){
+						$length++;
+						$segment = substr($words[0], 0, $length + 1);
+					}
+					
+					$line->append(new Text(substr($words[0], 0, $length), $font, $color, $lineHeight, $style));
+					$this->blocks[] = new Line($this->width);
+					$line = end($this->blocks);
+					
+					$words[0] = substr($words[0], $length);
+					continue;
+				}
 				
-				$words[0] = substr($words[0], $length);
-				continue;
-			}
-			
-			$segment = implode(' ', array_slice($words, 0, $length + 1));
-			while($length < count($words) && $font->getTextWith($segment) < $remain){
-				$length++;
 				$segment = implode(' ', array_slice($words, 0, $length + 1));
-			}
-			
-			$line->append(new Text(implode(' ', array_splice($words, 0, $length)), $font, $color, $lineHeight, $style));
-			
-			if(count($words) > 0){
-				$this->blocks[] = new Line($this->width);
-				$line = end($this->blocks);
+				while($length < count($words) && $font->getTextWith($segment) < $remain){
+					$length++;
+					$segment = implode(' ', array_slice($words, 0, $length + 1));
+				}
+				
+				$line->append(new Text(implode(' ', array_splice($words, 0, $length)), $font, $color, $lineHeight, $style));
+				
+				if(count($words) > 0){
+					$this->blocks[] = new Line($this->width);
+					$line = end($this->blocks);
+				}
 			}
 		}
 	}
@@ -140,6 +152,7 @@ class Body implements Container {
 	 * @see \alf\Container::getContentWidth()
 	 */
 	public function getContentWidth(){
+		if($this->width === false) throw new \Exception('Width not set');
 		return $this->width;
 	}
 	
@@ -179,6 +192,61 @@ class Body implements Container {
 	 */
 	public function slice($height){
 		throw new \Exception('Not implimented');
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getMinimalWidth()
+	 */
+	public function getMinimalWidth(){
+		$width = 0;
+		
+		foreach($this->blocks as $block){
+			$width = max($width, $block->getMinimalWidth());
+			
+		}
+		
+		return $width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getCalulatedWidth()
+	 */
+	public function getCalulatedWidth(){
+		$width = 0;
+		
+		foreach($this->blocks as $block){
+			$width = max($width, $block->getCalulatedWidth());
+			
+		}
+		
+		return $width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::pack()
+	 */
+	public function pack($width){
+		$blocks = [];
+		
+		foreach($this->blocks as $block){
+			if($repalcements = $block->pack($width)){
+				foreach($repalcements as $repalcement){
+					$blocks[] = $repalcement;
+				}
+			}else{
+				$blocks[] = $block;
+			}
+		}
+		
+		$this->width	= $width;
+		$this->blocks	= $blocks;
+		return false;
 	}
 	
 	/**

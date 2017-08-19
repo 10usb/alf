@@ -55,22 +55,26 @@ class Section implements Block, Inline, Container {
 		$this->lineTop			= 0;
 		$this->preferredHeight	= 0;
 		
-		if($box == self::BORDER_BOX){
-			$this->width	= $width;
-			if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
-			if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
-			if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
-			if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
-			$this->contents = new Body($width);
-		}elseif($box == self::CONTENT_BOX){
-			$this->contents = new Body($width);
-			if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
-			if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
-			if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
-			if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
-			$this->width	= $width;
+		if($width!==false){
+			if($box == self::BORDER_BOX){
+				$this->width	= $width;
+				if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
+				if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
+				if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
+				if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
+				$this->contents = new Body($width);
+			}elseif($box == self::CONTENT_BOX){
+				$this->contents = new Body($width);
+				if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
+				if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
+				if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
+				if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
+				$this->width	= $width;
+			}else{
+				throw new \Exception('Invalid box model');
+			}
 		}else{
-			throw new \Exception('Invalid box model');
+			$this->contents = new Body(false);
 		}
 	}
 	
@@ -161,6 +165,7 @@ class Section implements Block, Inline, Container {
 	 * @see \alf\Element::getWidth()
 	 */
 	public function getWidth(){
+		if($this->width === false) throw new \Exception('Width not set');
 		return $this->width;
 	}
 	
@@ -257,6 +262,56 @@ class Section implements Block, Inline, Container {
 	 */
 	public function slice($height){
 		throw new \Exception('Not implimented');
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getMinimalWidth()
+	 */
+	public function getMinimalWidth(){
+		$width = $this->contents->getMinimalHeight();
+		
+		if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
+		if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
+		if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
+		if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
+		
+		return $width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getCalulatedWidth()
+	 */
+	public function getCalulatedWidth(){
+		$width = $this->contents->getCalulatedWidth();
+		
+		if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
+		if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
+		if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
+		if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
+		
+		return $width;
+	}
+	
+	/**
+	 * TODO aply correct bounding model
+	 * {@inheritDoc}
+	 * @see \alf\Packable::pack()
+	 */
+	public function pack($width){
+		$this->width = $width;
+		
+		if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
+		if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
+		if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
+		if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
+		
+		
+		if($this->contents->pack($width)!==false) throw new \Exception('Unexpected return value');
+		return false;
 	}
 	
 	/**

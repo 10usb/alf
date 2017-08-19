@@ -51,6 +51,46 @@ class Text implements Inline {
 	
 	/**
 	 * 
+	 * @return string
+	 */
+	public function getValue(){
+		return $this->value;
+	}
+	
+	/**
+	 * 
+	 * @return \alf\Font
+	 */
+	public function getFont(){
+		return $this->font;
+	}
+
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getColor(){
+		return $this->color;
+	}
+
+	/**
+	 * 
+	 * @return number
+	 */
+	public function getLineHeight(){
+		return $this->lineHeight;
+	}
+	
+	/**
+	 * 
+	 * @return array
+	 */
+	public function getStyle(){
+		return [];
+	}
+	
+	/**
+	 * 
 	 * {@inheritDoc}
 	 * @see \alf\Inline::setLineLeft()
 	 */
@@ -147,6 +187,33 @@ class Text implements Inline {
 	public function getHeight(){
 		if($this->lineHeight!==false) return max($this->lineHeight, $this->font->getSize());
 		return $this->font->getSize();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getMinimalWidth()
+	 */
+	public function getMinimalWidth(){
+		return $this->getWidth();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getCalulatedWidth()
+	 */
+	public function getCalulatedWidth(){
+		return $this->getWidth();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::pack()
+	 */
+	public function pack($width){
+		return false;
 	}
 	
 	/**

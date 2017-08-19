@@ -92,6 +92,7 @@ class Line implements Block {
 	 * @see \alf\Element::getWidth()
 	 */
 	public function getWidth(){
+		if($this->width === false) throw new \Exception('Width not set');
 		return $this->width;
 	}
 	
@@ -127,6 +128,62 @@ class Line implements Block {
 	public function getContentTrailMargin(){
 		if(!$this->items) return 0;
 		return end($this->items)->getMarginRight();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getMinimalWidth()
+	 */
+	public function getMinimalWidth(){
+		$width = 0;
+		
+		foreach($this->items as $item){
+			$width = max($width, $item->getMinimalWidth());
+			
+		}
+		
+		return $width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::getCalulatedWidth()
+	 */
+	public function getCalulatedWidth(){
+		$width = 0;
+		
+		foreach($this->items as $item){
+			$width+= $item->getCalulatedWidth();
+			
+		}
+		
+		return $width;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \alf\Packable::pack()
+	 */
+	public function pack($width){
+		if($width >= $this->getCalulatedWidth()){
+			$this->width	= $width;
+			return false;
+		}
+		
+		$body = new Body($width);
+		foreach($this->items as $item){
+			if($item instanceof Text){
+				$body->appendText($item->getValue(), $item->getFont(), $item->getColor(), $item->getLineHeight(), $item->getStyle());
+			}else{
+				if($item->pack($width)!==false) throw new \Exception('Unexpected return value');
+				$body->appendInline($item);
+			}
+		}
+		
+		return $body->getBlocks();
 	}
 	
 	/**

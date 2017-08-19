@@ -1,7 +1,7 @@
 <?php
 namespace alf;
 
-interface Container extends Sliceable, Renderable {
+interface Container extends Sliceable, Packable, Renderable {
 	/**
 	 *
 	 * @param \alf\Block $element
