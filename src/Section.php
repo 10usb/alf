@@ -265,9 +265,9 @@ class Section implements Block, Inline, Container {
 	 * @see \alf\Renderable::render()
 	 */
 	public function render($canvas){
-		$this->renderBackground($canvas);
-		$this->renderContents($canvas);
-		$this->renderBorder($canvas);
+		$this->renderBackground(new TranslatedCanvas($canvas, $this->lineLeft, $this->lineTop));
+		$this->renderContents(new TranslatedCanvas($canvas, $this->lineLeft, $this->lineTop));
+		$this->renderBorder(new TranslatedCanvas($canvas, $this->lineLeft, $this->lineTop));
 	}
 	
 	/**

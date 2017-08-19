@@ -161,8 +161,13 @@ class Body implements Container {
 	 */
 	public function getCalulatedHeight(){
 		$height = 0;
-		foreach($this->blocks as $block){
+		$margin = 0;
+		foreach($this->blocks as $index=>$block){
+			if($index > 0){
+				$height+= max($margin, $block->getMarginTop());
+			}
 			$height+= $block->getHeight();
+			$margin = $block->getMarginBottom();
 		}
 		return $height;
 	}
