@@ -151,8 +151,8 @@ class Body implements Container {
 	 * {@inheritDoc}
 	 * @see \alf\Container::getContentWidth()
 	 */
-	public function getContentWidth(){
-		if($this->width === false) throw new \Exception('Width not set');
+	public function getContentWidth($throw = true){
+		if($throw && $this->width === false) throw new \Exception('Width not set');
 		return $this->width;
 	}
 	

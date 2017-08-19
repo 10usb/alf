@@ -25,9 +25,10 @@ interface Container extends Sliceable, Packable, Renderable {
 	
 	/**
 	 * Returns the widht of the content
+	 * @param boolean $throw
 	 * @return number
 	 */
-	public function getContentWidth();
+	public function getContentWidth($throw = false);
 	
 	/**
 	 * Returns the calculated height this block will consume which could be a fixed value or dynamic value depending on its content

@@ -251,8 +251,8 @@ class Section implements Block, Inline, Container {
 	 * {@inheritDoc}
 	 * @see \alf\Container::getContentWidth()
 	 */
-	public function getContentWidth(){
-		return $this->contents->getContentWidth();
+	public function getContentWidth($throw = true){
+		return $this->contents->getContentWidth($throw);
 	}
 	
 	/**
