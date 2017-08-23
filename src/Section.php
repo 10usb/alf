@@ -18,12 +18,6 @@ class Section implements Block, Inline, Container {
 	private $preferredHeight;
 	
 	/**
-	 *
-	 * @var \alf\Container
-	 */
-	private $contents;
-	
-	/**
 	 * 
 	 * @var integer
 	 */
@@ -43,6 +37,12 @@ class Section implements Block, Inline, Container {
 	private $lineLeft, $lineTop;
 	
 	/**
+	 *
+	 * @var \alf\Container
+	 */
+	private $contents;
+	
+	/**
 	 * 
 	 * @param number $width
 	 * @param array $style
@@ -55,26 +55,32 @@ class Section implements Block, Inline, Container {
 		$this->lineTop			= 0;
 		$this->preferredHeight	= 0;
 		
-		if($width!==false){
-			if($box == self::BORDER_BOX){
-				$this->width	= $width;
-				if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
-				if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
-				if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
-				if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
-				$this->contents = new Body($width);
-			}elseif($box == self::CONTENT_BOX){
-				$this->contents = new Body($width);
-				if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
-				if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
-				if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
-				if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
-				$this->width	= $width;
-			}else{
-				throw new \Exception('Invalid box model');
-			}
+		if($box instanceof Body){
+			// TODO Move to child class
+			$this->width	= $width;
+			$this->contents = $box;
 		}else{
-			$this->contents = new Body(false);
+			if($width!==false){
+				if($box == self::BORDER_BOX){
+					$this->width	= $width;
+					if(isset($this->style['padding-left'])) $width-= $this->style['padding-left'];
+					if(isset($this->style['padding-right'])) $width-= $this->style['padding-right'];
+					if(isset($this->style['border-left-width'])) $width-= $this->style['border-left-width'];
+					if(isset($this->style['border-right-width'])) $width-= $this->style['border-right-width'];
+					$this->contents = new Body($width);
+				}elseif($box == self::CONTENT_BOX){
+					$this->contents = new Body($width);
+					if(isset($this->style['padding-left'])) $width+= $this->style['padding-left'];
+					if(isset($this->style['padding-right'])) $width+= $this->style['padding-right'];
+					if(isset($this->style['border-left-width'])) $width+= $this->style['border-left-width'];
+					if(isset($this->style['border-right-width'])) $width+= $this->style['border-right-width'];
+					$this->width	= $width;
+				}else{
+					throw new \Exception('Invalid box model');
+				}
+			}else{
+				$this->contents = new Body(false);
+			}
 		}
 	}
 	
@@ -256,12 +262,20 @@ class Section implements Block, Inline, Container {
 	}
 	
 	/**
-	 * TODO inpliment this method
+	 * 
 	 * {@inheritDoc}
 	 * @see \alf\Sliceable::slice()
 	 */
 	public function slice($height){
-		throw new \Exception('Not implimented');
+		if(isset($this->style['padding-top'])) $height-= $this->style['padding-top'];
+		if(isset($this->style['padding-bottom'])) $height-= $this->style['padding-bottom'];
+		if(isset($this->style['border-top-width'])) $height-= $this->style['border-top-width'];
+		if(isset($this->style['border-bottom-width'])) $height-= $this->style['border-bottom-width'];
+		
+		$body = $this->contents->slice($height);
+		if(!$body) return false;
+		
+		return new self($this->width, $this->style, $body);
 	}
 	
 	/**

@@ -191,7 +191,55 @@ class Body implements Container {
 	 * @see \alf\Sliceable::slice()
 	 */
 	public function slice($height){
-		throw new \Exception('Not implimented');
+		// No slicing is needed when its within the defined height
+		if($this->getCalulatedHeight() <= $height) return false;
+		
+		// If only 1 child check if that can be split
+		if(count($this->blocks) <= 1){
+			if($this->blocks[0] instanceof Sliceable && $block = $this->blocks[0]->slice($height - $sliceHeight)){
+				// Create new body
+				$slice = new self($this->width);
+				$slice->blocks[] = $block;
+				return $slice;
+			}
+			
+			return false;
+		}
+		
+		$sliceHeight = 0;
+		$margin = 0;
+		foreach($this->blocks as $index=>$block){
+			if($index > 0){
+				$temp = max($margin, $block->getMarginTop()) + $block->getHeight();
+			}else{
+				$temp = $block->getHeight();
+			}
+			if(($sliceHeight + $temp) > $height) break;
+			
+			$sliceHeight+= $temp;
+			$margin = $block->getMarginBottom();
+			$count++;
+		}
+		
+		// Slice of the piece that fits
+		$blocks = array_splice($this->blocks, 0, $count);
+		
+		// Check if the last line can be split
+		if($this->blocks[0] instanceof Sliceable && $this->blocks[0]->getMinimalHeight() <= ($height - $sliceHeight)){
+			if($block = $this->blocks[0]->slice($height - $sliceHeight)){
+				$blocks[] = $block;
+			}
+		}
+		
+		// Makes sure atleast one line is cut of
+		if(count($blocks)<=0){
+			$blocks = array_splice($this->blocks, 0, 1);
+		}
+		
+		// Create new body
+		$slice = new self($this->width);
+		$slice->blocks = $blocks;
+		return $slice;
 	}
 	
 	/**
